@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroCast | Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        /* ── Expandable Card Styles ── */
+        .card-header {
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header .feed-img {
+            transition: transform 0.5s ease;
+        }
+
+        .card-header:hover .feed-img {
+            transform: scale(1.04);
+        }
+
+        /* Click-to-expand hint overlay on image */
+        .expand-hint {
+            position: absolute;
+            bottom: 14px;
+            right: 14px;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 7px 14px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.5px;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .news-section.expanded .expand-hint {
+            opacity: 0;
+        }
+
+        /* Preview content — always visible */
+        .card-preview {
+            padding: 28px 32px 0;
+        }
+
+        /* Expandable extra content */
+        .card-extra {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 0.45s ease,
+                        padding 0.3s ease;
+            opacity: 0;
+            padding: 0 32px;
+        }
+
+        .news-section.expanded .card-extra {
+            max-height: 900px;
+            opacity: 1;
+            padding: 0 32px;
+        }
+
+        /* Toggle Footer */
+        .card-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 32px 24px;
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 0.88rem;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            border-top: 1px solid rgba(5, 150, 105, 0.1);
+            margin-top: 20px;
+            transition: background 0.2s;
+            user-select: none;
+        }
+
+        .card-toggle:hover {
+            background: rgba(5, 150, 105, 0.04);
+        }
+
+        .card-toggle i {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-size: 1rem;
+        }
+
+        .news-section.expanded .card-toggle i {
+            transform: rotate(180deg);
+        }
+
+        /* Divider between news items inside the card */
+        .news-item + .news-item {
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            padding-top: 20px;
+        }
+
+        /* Tag badge on each story */
+        .news-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            padding: 4px 11px;
+            border-radius: 50px;
+            margin-bottom: 8px;
+        }
+
+        .tag-green  { background: rgba(5,150,105,0.10); color: var(--primary); }
+        .tag-amber  { background: rgba(245,158,11,0.12); color: #b45309; }
+        .tag-red    { background: rgba(229,57,53,0.10); color: #c62828; }
+        .tag-blue   { background: rgba(14,165,233,0.12); color: #0369a1; }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-brand"><i class="fas fa-leaf"></i> AgroCast</div>
+        <div class="nav-auth">
+            <a href="./login.html" class="nav-link">Login</a>
+            <a href="./register.html" class="btn-sm">Register</a>
+        </div>
+    </nav>
+
+    <header class="home-hero">
+        <div class="hero-badge"><i class="fas fa-satellite-dish"></i> Live Farm Intelligence</div>
+        <h1>Cultivating Knowledge</h1>
+        <p>Your daily feed for precision agriculture and pest management across Nigeria.</p>
+        <a href="./register.html" class="btn-lg"><i class="fas fa-seedling"></i> Start Growing Today</a>
+    </header>
+
+    <main class="dashboard-container">
+
+        <!-- ══════════════════════════════════
+             SECTION 1 — Agriculture & Food
+             ══════════════════════════════════ -->
+        <section class="news-section" id="section-agri">
+            <div class="card-label"><i class="fas fa-wheat-awn"></i> Agriculture &amp; Food Update</div>
+            <div class="card" style="padding:0;">
+
+                <!-- Clickable image header -->
+                <div class="card-header" onclick="toggleSection('section-agri')">
+                    <img src="./images/agri-market.jpg" alt="Agricultural market in Nigeria" class="feed-img">
+                    <div class="expand-hint"><i class="fas fa-chevron-down"></i> Tap to read more</div>
+                </div>
+
+                <!-- Always visible preview -->
+                <div class="card-preview">
+                    <div class="news-item">
+                        <span class="news-tag tag-green"><i class="fas fa-chart-bar"></i> Market</span>
+                        <h4>Global Grain Supply Trends</h4>
+                        <p>New reports suggest a 5% increase in maize yield expectations for the coming quarter across West African trade hubs.</p>
+                    </div>
+                </div>
+
+                <!-- Hidden extra stories -->
+                <div class="card-extra">
+                    <div class="news-item" style="margin-top:20px; padding-top:20px; border-top:1px solid rgba(0,0,0,0.06);">
+                        <span class="news-tag tag-amber"><i class="fas fa-seedling"></i> Fertilizer</span>
+                        <h4>Organic Fertilizers on the Rise</h4>
+                        <p>Local farmers in Ogun State are switching to poultry-based compost for sustainable cassava farming, reducing chemical input costs by up to 30%.</p>
+                    </div>
+                    <div class="news-item">
+                        <span class="news-tag tag-green"><i class="fas fa-truck"></i> Trade</span>
+                        <h4>Export Corridor Opens for Cocoa</h4>
+                        <p>A new trade agreement signed between Nigeria and the EU will accelerate cocoa exports from Cross River and Ondo States, promising better farmgate prices for smallholders.</p>
+                    </div>
+                    <div class="news-item">
+                        <span class="news-tag tag-blue"><i class="fas fa-tractor"></i> Tech</span>
+                        <h4>Government Subsidy for Mechanised Farming</h4>
+                        <p>The Federal Ministry of Agriculture launches a ₦12 billion scheme to subsidise tractor hire services for small-scale farmers across the North-West geopolitical zone.</p>
+                    </div>
+                </div>
+
+                <!-- Toggle footer -->
+                <div class="card-toggle" onclick="toggleSection('section-agri')">
+                    <span class="toggle-label">See more stories</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════
+             SECTION 2 — Weather & Crops
+             ══════════════════════════════════ -->
+        <section class="news-section" id="section-weather">
+            <div class="card-label"><i class="fas fa-cloud-sun"></i> Weather &amp; Crop Insights</div>
+            <div class="card" style="padding:0;">
+
+                <div class="card-header" onclick="toggleSection('section-weather')">
+                    <img src="./images/crops-field.jpg" alt="Healthy green crops in field" class="feed-img">
+                    <div class="expand-hint"><i class="fas fa-chevron-down"></i> Tap to read more</div>
+                </div>
+
+                <div class="card-preview">
+                    <div class="news-item">
+                        <span class="news-tag tag-blue"><i class="fas fa-cloud-rain"></i> Rainfall</span>
+                        <h4>Regional Rain Forecast</h4>
+                        <p>Early onset of the wet season expected in southwestern regions. Farmers are advised to prepare drainage systems and select moisture-tolerant seed varieties.</p>
+                    </div>
+                </div>
+
+                <div class="card-extra">
+                    <div class="news-item" style="margin-top:20px; padding-top:20px; border-top:1px solid rgba(0,0,0,0.06);">
+                        <span class="news-tag tag-amber"><i class="fas fa-temperature-high"></i> Heat</span>
+                        <h4>Heatwave Warning in the North</h4>
+                        <p>Temperatures in Sokoto and Katsina are forecast to exceed 42°C this week. Drip irrigation and mulching are recommended to protect tomato and pepper crops from heat stress.</p>
+                    </div>
+                    <div class="news-item">
+                        <span class="news-tag tag-green"><i class="fas fa-leaf"></i> Crops</span>
+                        <h4>Best Crops for This Season</h4>
+                        <p>Agronomists recommend planting cowpea and sorghum varieties in the Middle Belt region for maximum yield during the expected bi-modal rainfall pattern this year.</p>
+                    </div>
+                    <div class="news-item">
+                        <span class="news-tag tag-blue"><i class="fas fa-wind"></i> Harmattan</span>
+                        <h4>Late Harmattan Impact on Irrigation</h4>
+                        <p>Prolonged dry winds have reduced soil moisture levels in Benue Valley farmlands. Irrigation schedules should be increased by 20% to compensate for evapotranspiration losses.</p>
+                    </div>
+                </div>
+
+                <div class="card-toggle" onclick="toggleSection('section-weather')">
+                    <span class="toggle-label">See more stories</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════
+             SECTION 3 — Pest Management
+             ══════════════════════════════════ -->
+        <section class="news-section" id="section-pest">
+            <div class="card-label"><i class="fas fa-bug"></i> Pest Management Alert</div>
+            <div class="card" style="border-left: 6px solid #e53935; padding:0;">
+
+                <div class="card-header" onclick="toggleSection('section-pest')">
+                    <img src="./images/pest-farmer.jpg" alt="Farmer inspecting crops for pests" class="feed-img">
+                    <div class="expand-hint"><i class="fas fa-chevron-down"></i> Tap to read more</div>
+                </div>
+
+                <div class="card-preview">
+                    <div class="news-item">
+                        <span class="news-tag tag-red"><i class="fas fa-exclamation-triangle"></i> Alert</span>
+                        <h4 style="color:#e53935;">Fall Armyworm Alert</h4>
+                        <p>Infestations reported in neighboring districts. Inspect your maize crops for leaf damage immediately to prevent total yield loss. Contact local extensions for approved biological controls.</p>
+                    </div>
+                </div>
+
+                <div class="card-extra">
+                    <div class="news-item" style="margin-top:20px; padding-top:20px; border-top:1px solid rgba(0,0,0,0.06);">
+                        <span class="news-tag tag-red"><i class="fas fa-spider"></i> Infestation</span>
+                        <h4>Cassava Mealybug Resurgence</h4>
+                        <p>Field officers in Anambra and Enugu States confirm a resurgence of cassava mealybug. Farmers are advised to source uninfected stem cuttings and apply recommended neem-based insecticides.</p>
+                    </div>
+                    <div class="news-item">
+                        <span class="news-tag tag-amber"><i class="fas fa-shield-alt"></i> Control</span>
+                        <h4>Biological Agents Now Available</h4>
+                        <p>IITA has released consignments of parasitic wasps (<em>Anagyrus lopezi</em>) to extension offices in 14 states — a proven, chemical-free method to control mealybug populations.</p>
+                    </div>
+                    <div class="news-item">
+                        <span class="news-tag tag-green"><i class="fas fa-flask"></i> Research</span>
+                        <h4>New Resistant Maize Varieties Approved</h4>
+                        <p>NASC approves three new open-pollinated maize varieties with improved tolerance to stem borer and streak virus, available for distribution to farmers before the main planting season.</p>
+                    </div>
+                </div>
+
+                <div class="card-toggle" onclick="toggleSection('section-pest')">
+                    <span class="toggle-label">See more stories</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </section>
+
+        <div class="cta-section">
+            <h3>Want personalized advice for your farm?</h3>
+            <p>Join thousands of farmers receiving real-time weather and pest alerts.</p>
+            <a href="./register.html" class="btn-lg"><i class="fas fa-leaf"></i> Join AgroCast Today</a>
+        </div>
+    </main>
+
+    <footer style="text-align: center; padding: 60px 20px; color: var(--text-light); font-size: 0.9rem;">
+        <p>&copy; 2026 AgroCast Agriculture Technology. All rights reserved.</p>
+        <div style="margin-top: 10px;">
+            <a href="#" style="color: var(--primary); margin: 0 10px;">Privacy Policy</a>
+            <a href="#" style="color: var(--primary); margin: 0 10px;">Contact Support</a>
+        </div>
+    </footer>
+
+    <script>
+        function toggleSection(id) {
+            const section = document.getElementById(id);
+            const isExpanded = section.classList.contains('expanded');
+            const toggle = section.querySelector('.card-toggle .toggle-label');
+
+            section.classList.toggle('expanded', !isExpanded);
+            toggle.textContent = isExpanded ? 'See more stories' : 'See less';
+        }
+    </script>
+</body>
+
+</html>

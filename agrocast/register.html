@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroCast | Register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div class="hero-wrapper">
+        <div class="login-card">
+            <div class="brand-badge"><i class="fas fa-leaf fa-2x"></i></div>
+            <h2>Create Account</h2>
+            <p class="subtitle">Join the AgroCast network</p>
+
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="regUsername" placeholder="e.g. johndoe">
+            </div>
+            <div class="input-group">
+                <label>First Name</label>
+                <input type="text" id="regName" placeholder="e.g. John">
+            </div>
+            <div class="input-group">
+                <label>Last Name</label>
+                <input type="text" id="regSurname" placeholder="e.g. Doe">
+            </div>
+            <div class="input-group">
+                <label>Phone Number</label>
+                <input type="tel" id="regPhone" placeholder="e.g. +1234567890">
+            </div>
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="regEmail" placeholder="e.g. john.doe@example.com">
+            </div>
+            <div class="input-group">
+                <label>Enter Password</label>
+                <input type="password" id="regPassword" placeholder="••••••••">
+            </div>
+            <div class="input-group">
+                <label>Confirm Password</label>
+                <input type="password" id="regConfirmPassword" placeholder="••••••••">
+            </div>
+
+            <button id="registerBtn">Complete Registration</button>
+            <p style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-light);">
+                Already have an account? <a href="./login.html"
+                    style="color: var(--primary); font-weight: 600; text-decoration: none;">Login here</a>
+            </p>
+        </div>
+    </div>
+    <script src="./app.js"></script>
+</body>
+
+</html>

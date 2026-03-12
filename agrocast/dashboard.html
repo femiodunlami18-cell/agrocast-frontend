@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#059669">
+    <title>AgroCast | Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body class="app-page">
+    <nav class="navbar">
+        <div class="nav-brand"><i class="fas fa-leaf"></i> AgroCast</div>
+        <div id="userGreeting" style="font-weight:700; color:var(--text-bold);"></div>
+    </nav>
+
+    <main class="dashboard-container">
+        <div class="card weather-card"
+            style="position: relative; overflow: hidden; border: none; padding: 32px; background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(240,253,244,0.9));">
+            <div
+                style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%); border-radius: 50%;">
+            </div>
+            <div class="card-label" style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 1.2rem;">📍</span> Farm Location Weather
+            </div>
+            <div class="weather-main" style="align-items: flex-end;">
+                <div class="temp-big" id="tempText"
+                    style="font-size: 5rem; text-shadow: 2px 4px 10px rgba(0,0,0,0.05);">--°C</div>
+                <img id="weather-icon" src="" alt="icon" style="width: 120px; margin-bottom: -15px;">
+            </div>
+            <h3 id="locationName"
+                style="margin: 10px 0 0; color: var(--text-bold); font-size: 1.6rem; letter-spacing: -0.5px;">Loading
+                Location...</h3>
+            <div class="advisory-box"
+                style="background: rgba(255, 251, 235, 0.8); border: 1px solid rgba(245, 158, 11, 0.3); backdrop-filter: blur(8px);">
+                <i class="fas fa-lightbulb"
+                    style="color: var(--accent); font-size: 1.6rem; margin-top: 2px; filter: drop-shadow(0 2px 4px rgba(245,158,11,0.2));"></i>
+                <p id="advisory-text" style="color: #b45309;">Analyzing optimal conditions for your crops...</p>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 24px; background: rgba(255,255,255,0.7);">
+            <div class="card-label" style="margin-bottom: 20px;">
+                <span style="font-size: 1.2rem;">📰</span> Agricultural News Feed
+            </div>
+            <div class="news-item"
+                style="background: white; padding: 20px; border-radius: 16px; margin-bottom: 12px; border: 1px solid rgba(16,185,129,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+                <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                    <span
+                        style="background: rgba(16,185,129,0.1); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">TECH</span>
+                    <span style="color: var(--text-light); font-size: 0.8rem; padding-top: 4px;">2h ago</span>
+                </div>
+                <h4 style="font-size: 1.15rem; margin-bottom: 6px;">Smart Irrigation Systems in 2026</h4>
+                <p style="color: var(--text-main);">Learn how automated systems are saving up to 40% more water during
+                    the crucial dry seasons.</p>
+            </div>
+            <div class="news-item"
+                style="background: white; padding: 20px; border-radius: 16px; margin-bottom: 12px; border: 1px solid rgba(16,185,129,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+                <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                    <span
+                        style="background: rgba(245,158,11,0.1); color: #d97706; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">MARKET</span>
+                    <span style="color: var(--text-light); font-size: 0.8rem; padding-top: 4px;">5h ago</span>
+                </div>
+                <h4 style="font-size: 1.15rem; margin-bottom: 6px;">Market Outlook: Grain Prices</h4>
+                <p style="color: var(--text-main);">Maize and local grain prices have seen a steady 10% increase this
+                    week across regional markets.</p>
+            </div>
+            <div class="news-item"
+                style="background: white; padding: 20px; border-radius: 16px; border: 1px solid rgba(16,185,129,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+                <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                    <span
+                        style="background: rgba(16,185,129,0.1); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">FARMING</span>
+                    <span style="color: var(--text-light); font-size: 0.8rem; padding-top: 4px;">1d ago</span>
+                </div>
+                <h4 style="font-size: 1.15rem; margin-bottom: 6px;">Organic Fertilizers Rising</h4>
+                <p style="color: var(--text-main);">New study shows crop yields remaining stable with premium organic
+                    alternatives.</p>
+            </div>
+        </div>
+
+        <!-- Create Farm Modal (Hidden by default) -->
+        <div id="createFarmModal"
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+            <div class="card" style="width: 90%; max-width: 400px; padding: 24px; background: white;">
+                <h3 style="margin-bottom: 8px;">Register Your Farm</h3>
+                <p style="color: var(--text-light); margin-bottom: 20px; font-size: 0.9rem;">To get accurate weather and
+                    crop recommendations, please register your primary farm.</p>
+
+                <div class="input-group">
+                    <label>Farm Name</label>
+                    <input type="text" id="farmName" placeholder="e.g. Sunny Acres Farm">
+                </div>
+                <div class="input-group">
+                    <label>Location (City)</label>
+                    <input type="text" id="farmLocation" placeholder="e.g. Lagos">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="input-group" style="flex: 1;">
+                        <label>Latitude</label>
+                        <input type="number" id="farmLat" placeholder="e.g. 6.52" step="0.01">
+                    </div>
+                    <div class="input-group" style="flex: 1;">
+                        <label>Longitude</label>
+                        <input type="number" id="farmLng" placeholder="e.g. 3.37" step="0.01">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Primary Crop</label>
+                    <select id="farmCrop"
+                        style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 12px; background: var(--bg-light); font-family: inherit; font-size: 1rem;">
+                        <option value="maize">Maize</option>
+                        <option value="rice">Rice</option>
+                        <option value="cassava">Cassava</option>
+                        <option value="wheat">Wheat</option>
+                        <option value="tomato">Tomato</option>
+                    </select>
+                </div>
+                <!-- Adding hidden user ID or state since state is required by API scheme -->
+                <input type="hidden" id="farmState" value="Active">
+
+                <button id="submitFarmBtn" style="margin-top: 10px;">Save Farm Details</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item active">
+            <i class="fas fa-house-chimney"></i><span>Overview</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-chart-line"></i><span>Market</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user-circle"></i><span>Profile</span>
+        </a>
+    </div>
+
+    <script src="./app.js"></script>
+</body>
+
+</html>
