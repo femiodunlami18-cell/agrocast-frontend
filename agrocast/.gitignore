@@ -1,0 +1,7 @@
+# API Credentials and Environment Variables
+.env
+config.js
+
+# IDE / OS Files
+.vscode/
+.DS_Store
