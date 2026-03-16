@@ -1,9 +1,9 @@
-const API_KEY = '4bd2e5de2695e51cd40343bc46862c29';
+const API_KEY = typeof CONFIG !== 'undefined' ? CONFIG.API_KEY : '4bd2e5de2695e51cd40343bc46862c29';
 
 document.addEventListener("DOMContentLoaded", () => {
     const profile = JSON.parse(localStorage.getItem("farmer_profile"));
 
-    const API_BASE_URL = 'https://agro-cast.onrender.com';
+    const API_BASE_URL = typeof CONFIG !== 'undefined' ? CONFIG.API_BASE_URL : 'https://agro-cast.onrender.com';
 
     window.apiFetch = async function (endpoint, options = {}) {
         const token = localStorage.getItem('agrocast_token');
