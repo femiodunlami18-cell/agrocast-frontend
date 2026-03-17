@@ -115,16 +115,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         body: JSON.stringify(data)
                     });
 
-                    // Depending on API response, it might auto-login or just send success message
-                    if (responseData && responseData.token) {
-                        localStorage.setItem('agrocast_token', responseData.token);
-                        localStorage.setItem('farmer_profile', JSON.stringify(responseData.user));
-                        window.location.href = "./dashboard.html";
-                    } else {
-                        // Registration success but maybe requires manual login or email verification
-                        alert("Registration successful! Please login.");
-                        window.location.href = "./login.html";
-                    }
+                    // Success: Show thank you message and redirect to login
+                    alert("Thank you for registering! An email was sent to you to verify your account.");
+                    window.location.href = "./login.html";
                 } catch (error) {
                     alert(`Registration failed: ${error.message}`);
                     registerBtn.innerText = originalText;
@@ -151,8 +144,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const farms = await window.apiFetch(`/farms/user/${profile.id}`);
 
                 if (!farms || farms.length === 0) {
-                    // Show create farm modal
-                    modal.style.display = "flex";
+                    console.log("No farms found for user.");
+                    // Show message or state that farm is needed
+                    document.getElementById("locationName").innerText = "No Farm Registered";
+                    document.getElementById("advisory-text").innerText = "Click 'Register New Farm' to get started.";
                 } else {
                     // Use the first farm for dashboard
                     const primaryFarm = farms[0];
@@ -160,31 +155,90 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             } catch (e) {
                 console.error("Error loading dashboard data:", e);
-                // Fallback to modal if error
+            }
+        }
+
+        // Handle Modal Opening
+        const openFarmModalBtn = document.getElementById("openFarmModalBtn");
+        if (openFarmModalBtn) {
+            openFarmModalBtn.addEventListener("click", () => {
                 modal.style.display = "flex";
+                loadSupportedCrops();
+            });
+        }
+
+        async function loadSupportedCrops() {
+            const cropSelect = document.getElementById("farmCrop");
+            if (!cropSelect) return;
+
+            try {
+                const crops = await window.apiFetch('/recommendations/crops');
+                cropSelect.innerHTML = '<option value="">Select a crop</option>';
+                
+                if (Array.isArray(crops)) {
+                    crops.forEach(crop => {
+                        const option = document.createElement("option");
+                        option.value = crop.toLowerCase();
+                        option.textContent = crop.charAt(0).toUpperCase() + crop.slice(1);
+                        cropSelect.appendChild(option);
+                    });
+                } else if (crops && typeof crops === 'object') {
+                   // Handle object if crops are in a named array like crops.list
+                   const cropList = crops.crops || crops.supportedCrops || [];
+                   cropList.forEach(crop => {
+                        const option = document.createElement("option");
+                        option.value = crop.toLowerCase();
+                        option.textContent = crop.charAt(0).toUpperCase() + crop.slice(1);
+                        cropSelect.appendChild(option);
+                    });
+                }
+            } catch (e) {
+                console.error("Failed to load crops:", e);
+                cropSelect.innerHTML = '<option value="">Error loading crops</option>';
             }
         }
 
         // Handle Farm Creation
         if (submitFarmBtn) {
             submitFarmBtn.addEventListener("click", async () => {
-                const farmData = {
-                    userId: profile.id,
-                    name: document.getElementById("farmName").value,
-                    location: document.getElementById("farmLocation").value,
-                    latitude: parseFloat(document.getElementById("farmLat").value),
-                    longitude: parseFloat(document.getElementById("farmLng").value),
-                    size: 1.0, // Default size
-                    cropType: document.getElementById("farmCrop").value,
-                    state: document.getElementById("farmState").value
-                };
+                const farmName = document.getElementById("farmName").value;
+                const farmLocation = document.getElementById("farmLocation").value; // City
+                const farmState = document.getElementById("farmState").value; // State
+                const farmCrop = document.getElementById("farmCrop").value;
 
-                if (farmData.name && farmData.location && !isNaN(farmData.latitude) && !isNaN(farmData.longitude)) {
+                if (farmName && farmLocation && farmState && farmCrop) {
                     const originalText = submitFarmBtn.innerText;
-                    submitFarmBtn.innerText = "Saving...";
+                    submitFarmBtn.innerText = "Finding Location...";
                     submitFarmBtn.disabled = true;
 
                     try {
+                        // Use OpenWeatherMap Geocoding API to get lat/long from City, State
+                        const geoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(farmLocation)},${encodeURIComponent(farmState)},NG&limit=1&appid=${API_KEY}`;
+                        const geoResponse = await fetch(geoUrl);
+                        if (!geoResponse.ok) throw new Error("Geocoding service unavailable");
+                        
+                        const geoData = await geoResponse.json();
+
+                        if (!geoData || geoData.length === 0) {
+                            throw new Error("Could not find coordinates for this location. Please try adding more details to the city or state.");
+                        }
+
+                        const latitude = geoData[0].lat;
+                        const longitude = geoData[0].lon;
+
+                        const farmData = {
+                            userId: profile.id,
+                            name: farmName,
+                            location: farmLocation,
+                            latitude: latitude,
+                            longitude: longitude,
+                            size: 1.0, // Default size
+                            cropType: farmCrop,
+                            state: farmState
+                        };
+
+                        submitFarmBtn.innerText = "Saving Farm...";
+
                         const newFarm = await window.apiFetch('/farms/create', {
                             method: 'POST',
                             body: JSON.stringify(farmData)
@@ -192,6 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         modal.style.display = "none";
                         fetchWeather(newFarm);
+                        alert("Farm registered successfully!");
                     } catch (e) {
                         alert(`Failed to create farm: ${e.message}`);
                     } finally {
@@ -199,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         submitFarmBtn.disabled = false;
                     }
                 } else {
-                    alert("Please fill all fields with valid data!");
+                    alert("Please fill all required fields including crop type!");
                 }
             });
         }

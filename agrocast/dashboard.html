@@ -39,6 +39,10 @@
                     style="color: var(--accent); font-size: 1.6rem; margin-top: 2px; filter: drop-shadow(0 2px 4px rgba(245,158,11,0.2));"></i>
                 <p id="advisory-text" style="color: #b45309;">Analyzing optimal conditions for your crops...</p>
             </div>
+            
+            <button id="openFarmModalBtn" style="margin-top: 20px; border-radius: 50px; font-weight: 600; background: var(--bg-light); color: var(--primary); border: 2px solid var(--primary);">
+                <i class="fas fa-plus-circle" style="margin-right: 8px;"></i> Register New Farm
+            </button>
         </div>
 
         <div class="card" style="margin-top: 24px; background: rgba(255,255,255,0.7);">
@@ -98,27 +102,17 @@
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <div class="input-group" style="flex: 1;">
-                        <label>Latitude</label>
-                        <input type="number" id="farmLat" placeholder="e.g. 6.52" step="0.01">
-                    </div>
-                    <div class="input-group" style="flex: 1;">
-                        <label>Longitude</label>
-                        <input type="number" id="farmLng" placeholder="e.g. 3.37" step="0.01">
+                        <label>State</label>
+                        <input type="text" id="farmState" placeholder="e.g. Lagos">
                     </div>
                 </div>
                 <div class="input-group">
                     <label>Primary Crop</label>
                     <select id="farmCrop"
                         style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 12px; background: var(--bg-light); font-family: inherit; font-size: 1rem;">
-                        <option value="maize">Maize</option>
-                        <option value="rice">Rice</option>
-                        <option value="cassava">Cassava</option>
-                        <option value="wheat">Wheat</option>
-                        <option value="tomato">Tomato</option>
+                        <option value="">Loading crops...</option>
                     </select>
                 </div>
-                <!-- Adding hidden user ID or state since state is required by API scheme -->
-                <input type="hidden" id="farmState" value="Active">
 
                 <button id="submitFarmBtn" style="margin-top: 10px;">Save Farm Details</button>
             </div>
@@ -128,9 +122,6 @@
     <div class="bottom-nav">
         <a href="dashboard.html" class="nav-item active">
             <i class="fas fa-house-chimney"></i><span>Overview</span>
-        </a>
-        <a href="#" class="nav-item">
-            <i class="fas fa-chart-line"></i><span>Market</span>
         </a>
         <a href="profile.html" class="nav-item">
             <i class="fas fa-user-circle"></i><span>Profile</span>
