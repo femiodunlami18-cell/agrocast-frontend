@@ -151,8 +151,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!farms || farms.length === 0) {
                     console.log("No farms found for user.");
                     // Show message or state that farm is needed
-                    document.getElementById("locationName").innerText = "No Farm Registered";
-                    document.getElementById("advisory-text").innerText = "Click 'Register New Farm' to get started.";
+                    const locElement = document.getElementById("locationName");
+                    if (locElement) locElement.innerText = "No Farm Registered";
+                    const advElement = document.getElementById("advisory-text");
+                    if (advElement) advElement.innerText = "Click 'Manage Farms' to get started.";
                 } else {
                     // Use the first farm for dashboard
                     const primaryFarm = farms[0];
@@ -171,7 +173,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 loadSupportedCrops();
             });
         }
-    }
 
     // Initialize global logger
     window.logActivity = function(activity) {
@@ -572,8 +573,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function fetchWeather(farm) {
+    const locElement = document.getElementById("locationName");
+    if (!locElement) return; // not on dashboard
+
     // First set location name and loading state
-    document.getElementById("locationName").innerText = farm.name || farm.location;
+    locElement.innerText = farm.name || farm.location;
     document.getElementById("tempText").innerText = `...`;
     document.getElementById("advisory-text").innerText = `Analyzing conditions for ${farm.cropType}...`;
 
