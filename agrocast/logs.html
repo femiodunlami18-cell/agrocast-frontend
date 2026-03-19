@@ -97,6 +97,17 @@
             <button class="filter-chip" data-filter="DELETE">Delete</button>
         </div>
 
+        <!-- Date Range Filter -->
+        <div style="background: white; border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(16,185,129,0.08); flex-wrap: wrap;">
+            <div style="flex:1; display:flex; gap:10px; align-items:center;">
+                <input type="date" id="logStartDate" style="flex:1; border:1px solid var(--border-color); border-radius:8px; padding:6px 10px;">
+                <span style="color:var(--text-light); font-size:0.85rem;">to</span>
+                <input type="date" id="logEndDate" style="flex:1; border:1px solid var(--border-color); border-radius:8px; padding:6px 10px;">
+            </div>
+            <button id="applyDateBtn" class="btn btn-primary-sm" style="padding:8px 16px;"><i class="fas fa-search"></i></button>
+            <button id="clearDateBtn" class="btn btn-outline-sm" style="padding:8px 16px;"><i class="fas fa-times"></i></button>
+        </div>
+
         <div id="logsContainer">
             <div class="loading-state">
                 <i class="fas fa-spinner fa-spin"></i>

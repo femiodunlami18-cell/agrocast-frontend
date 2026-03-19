@@ -41,10 +41,76 @@
                             style="margin-left: auto; font-weight: 600;">---</span></p>
                 </div>
 
-                <button id="logoutBtn"
-                    style="border-radius: 50px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; width: 80%; margin: 30px auto 0; display: block;">
-                    Log Out Securely <i class="fas fa-sign-out-alt" style="margin-left: 8px;"></i>
-                </button>
+                <div class="profile-actions" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+                    <button id="editProfileBtn" class="btn btn-outline" style="border-radius: 12px; width: 100%;">
+                        <i class="fas fa-user-edit"></i> Edit Profile
+                    </button>
+                    <button id="resendVerificationBtn" class="btn btn-primary" style="border-radius: 12px; width: 100%;">
+                        <i class="fas fa-envelope"></i> Resend Verification Email
+                    </button>
+                    <button id="ussdSimulatorBtn" class="btn btn-primary" style="background-color: var(--secondary); border-radius: 12px; width: 100%;">
+                        <i class="fas fa-mobile-alt"></i> Simulate USSD
+                    </button>
+                    <button id="deactivateBtn" class="btn btn-danger" style="border-radius: 12px; width: 100%; margin-top: 10px;">
+                        <i class="fas fa-user-times"></i> Deactivate Account
+                    </button>
+                    <button id="logoutBtn" class="btn btn-outline" style="border-radius: 12px; width: 100%; border-color: var(--text-light); color: var(--text-light);">
+                        <i class="fas fa-sign-out-alt"></i> Log Out Securely
+                    </button>
+                </div>
+
+                <!-- Edit Profile Modal -->
+                <div id="editProfileModal" class="modal-overlay" style="display: none;">
+                    <div class="modal-card">
+                        <h3 style="margin-bottom: 20px;"><i class="fas fa-user-edit"></i> Edit Profile</h3>
+                        <div class="input-group">
+                            <label>First Name</label>
+                            <input type="text" id="editFirstName">
+                        </div>
+                        <div class="input-group">
+                            <label>Last Name</label>
+                            <input type="text" id="editLastName">
+                        </div>
+                        <div class="input-group">
+                            <label>Phone Number</label>
+                            <input type="text" id="editPhone">
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button id="saveProfileBtn" class="btn btn-primary" style="flex:1;">Save</button>
+                            <button id="cancelEditBtn" class="btn btn-outline" style="flex:1;">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- USSD Simulator Modal -->
+                <div id="ussdModal" class="modal-overlay" style="display: none;">
+                    <div class="modal-card">
+                        <h3 style="margin-bottom: 20px;"><i class="fas fa-mobile-alt"></i> USSD Simulator</h3>
+                        <div class="input-group">
+                            <label>Session ID</label>
+                            <input type="text" id="ussdSessionId" value="12345">
+                        </div>
+                        <div class="input-group">
+                            <label>Service Code</label>
+                            <input type="text" id="ussdServiceCode" value="*384*123#">
+                        </div>
+                        <div class="input-group">
+                            <label>Phone Number</label>
+                            <input type="text" id="ussdPhone" value="08000000000">
+                        </div>
+                        <div class="input-group">
+                            <label>Text Input</label>
+                            <input type="text" id="ussdText" placeholder="Enter USSD response" value="">
+                        </div>
+                        <div style="background: var(--bg-light); border-radius: 12px; padding: 15px; margin-top: 15px; min-height: 50px; white-space: pre-wrap; font-family: monospace; border: 1px solid var(--border-color);" id="ussdResponse">
+                            Waiting for input...
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button id="sendUssdBtn" class="btn btn-primary" style="flex:1;">Send</button>
+                            <button id="closeUssdBtn" class="btn btn-outline" style="flex:1;">Close</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
