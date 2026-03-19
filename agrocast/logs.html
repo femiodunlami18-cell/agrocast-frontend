@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#059669">
+    <title>AgroCast | Activity Logs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        .log-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px 18px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(16,185,129,0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+        .log-icon-wrap {
+            width: 42px; height: 42px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; flex-shrink: 0;
+        }
+        .log-content { flex: 1; min-width: 0; }
+        .log-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .log-type-badge {
+            font-size: 0.7rem; font-weight: 800; padding: 3px 9px;
+            border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .log-date { font-size: 0.75rem; color: var(--text-light); white-space: nowrap; margin-left: 8px; }
+        .log-farm { font-weight: 700; color: var(--text-bold); font-size: 0.95rem; margin: 4px 0; }
+        .log-summary { color: var(--text-main); font-size: 0.85rem; }
+        .log-meta { display: flex; gap: 12px; margin-top: 6px; flex-wrap: wrap; }
+        .log-meta-chip {
+            font-size: 0.75rem; color: var(--text-light);
+            display: flex; align-items: center; gap: 4px;
+        }
+        /* Activity type colors */
+        .type-CREATE { background: rgba(16,185,129,0.12); color: #059669; }
+        .icon-CREATE { background: rgba(16,185,129,0.1); color: #059669; }
+        .type-RECOMMENDATION { background: rgba(99,102,241,0.12); color: #4f46e5; }
+        .icon-RECOMMENDATION { background: rgba(99,102,241,0.1); color: #4f46e5; }
+        .type-READ { background: rgba(14,165,233,0.12); color: #0284c7; }
+        .icon-READ { background: rgba(14,165,233,0.1); color: #0284c7; }
+        .type-UPDATE { background: rgba(245,158,11,0.12); color: #d97706; }
+        .icon-UPDATE { background: rgba(245,158,11,0.1); color: #d97706; }
+        .type-DELETE { background: rgba(239,68,68,0.12); color: #dc2626; }
+        .icon-DELETE { background: rgba(239,68,68,0.1); color: #dc2626; }
+        .type-ANALYSIS { background: rgba(139,92,246,0.12); color: #7c3aed; }
+        .icon-ANALYSIS { background: rgba(139,92,246,0.1); color: #7c3aed; }
+        .filter-bar {
+            display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 16px;
+            scrollbar-width: none;
+        }
+        .filter-bar::-webkit-scrollbar { display: none; }
+        .filter-chip {
+            border: 1.5px solid var(--border-color); background: white;
+            border-radius: 20px; padding: 6px 14px; font-size: 0.8rem;
+            font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.18s;
+            color: var(--text-light);
+        }
+        .filter-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-light); }
+        .empty-state i { font-size: 3rem; margin-bottom: 16px; color: #d1fae5; }
+        .loading-state { text-align: center; padding: 40px 20px; color: var(--text-light); }
+        .loading-state i { font-size: 2rem; margin-bottom: 12px; color: var(--primary); }
+        body.app-page {
+            background-image: url('https://images.unsplash.com/photo-1625246333584-bfd816ad51ad?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+
+<body class="app-page">
+    <nav class="navbar">
+        <div class="nav-brand"><i class="fas fa-leaf"></i> AgroCast</div>
+        <div id="userGreeting" style="font-weight:700; color:var(--text-bold);"></div>
+    </nav>
+
+    <main class="dashboard-container">
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-bold); margin-bottom: 16px;">
+            <i class="fas fa-clipboard-list" style="color: var(--primary); margin-right: 8px;"></i>Activity Logs
+        </h2>
+
+        <div class="filter-bar" id="filterBar">
+            <button class="filter-chip active" data-filter="ALL">All</button>
+            <button class="filter-chip" data-filter="CREATE">Create</button>
+            <button class="filter-chip" data-filter="RECOMMENDATION">Recommendations</button>
+            <button class="filter-chip" data-filter="ANALYSIS">Analysis</button>
+            <button class="filter-chip" data-filter="UPDATE">Update</button>
+            <button class="filter-chip" data-filter="DELETE">Delete</button>
+        </div>
+
+        <div id="logsContainer">
+            <div class="loading-state">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading activity logs...</p>
+            </div>
+        </div>
+    </main>
+
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-house-chimney"></i><span>Overview</span>
+        </a>
+        <a href="farm.html" class="nav-item">
+            <i class="fas fa-tractor"></i><span>Farms</span>
+        </a>
+        <a href="logs.html" class="nav-item active">
+            <i class="fas fa-clipboard-list"></i><span>Logs</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user-circle"></i><span>Profile</span>
+        </a>
+    </div>
+
+    <script src="./config.js"></script>
+    <script src="./app.js"></script>
+</body>
+
+</html>

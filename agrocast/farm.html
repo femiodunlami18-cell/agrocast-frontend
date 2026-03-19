@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#059669">
+    <title>AgroCast | My Farms</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        .farm-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(16,185,129,0.12);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        }
+        .farm-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .farm-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-bold);
+        }
+        .farm-crop-badge {
+            background: rgba(16,185,129,0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .farm-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .farm-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-light);
+            font-size: 0.88rem;
+        }
+        .farm-meta-item i { color: var(--primary); }
+        .farm-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn-sm {
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .btn-primary-sm { background: var(--primary); color: white; }
+        .btn-outline-sm { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
+        .btn-danger-sm { background: transparent; color: #ef4444; border: 1.5px solid #ef4444; }
+        .btn-sm:hover { transform: translateY(-1px); opacity: 0.9; }
+        .rec-modal-overlay {
+            display: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.55); z-index: 1000;
+            align-items: center; justify-content: center;
+        }
+        .rec-modal-box {
+            background: white; border-radius: 24px; padding: 28px;
+            width: 92%; max-width: 440px; max-height: 80vh; overflow-y: auto;
+        }
+        .rec-item {
+            background: rgba(16,185,129,0.05);
+            border-left: 3px solid var(--primary);
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .rec-item .rec-type { font-weight: 700; color: var(--primary); font-size: 0.82rem; text-transform: uppercase; }
+        .rec-item .rec-msg { color: var(--text-main); font-size: 0.9rem; margin-top: 4px; }
+        .priority-HIGH { border-left-color: #ef4444; }
+        .priority-HIGH .rec-type { color: #ef4444; }
+        .priority-MEDIUM { border-left-color: #f59e0b; }
+        .priority-MEDIUM .rec-type { color: #d97706; }
+        .edit-form { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.08); }
+        .edit-form.open { display: block; }
+        .loading-state { text-align: center; padding: 40px 20px; color: var(--text-light); }
+        .loading-state i { font-size: 2rem; margin-bottom: 12px; color: var(--primary); }
+        body.app-page {
+            background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+
+<body class="app-page">
+    <nav class="navbar">
+        <div class="nav-brand"><i class="fas fa-leaf"></i> AgroCast</div>
+        <div id="userGreeting" style="font-weight:700; color:var(--text-bold);"></div>
+    </nav>
+
+    <main class="dashboard-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-bold);">
+                <i class="fas fa-tractor" style="color: var(--primary); margin-right: 8px;"></i>My Farms
+            </h2>
+            <button id="openAddFarmBtn" style="border-radius: 50px; font-size: 0.88rem; padding: 10px 18px; font-weight: 700;">
+                <i class="fas fa-plus" style="margin-right: 6px;"></i> Add Farm
+            </button>
+        </div>
+
+        <div id="farmsContainer">
+            <div class="loading-state">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading your farms...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Recommendations Modal -->
+    <div id="recModal" class="rec-modal-overlay">
+        <div class="rec-modal-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 id="recModalTitle" style="font-size: 1.2rem; font-weight: 800;">Farm Recommendations</h3>
+                <button id="closeRecModal" style="background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-light);">✕</button>
+            </div>
+            <div id="recModalBody">
+                <div class="loading-state"><i class="fas fa-spinner fa-spin"></i><p>Loading recommendations...</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Farm Modal (reused from dashboard) -->
+    <div id="createFarmModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="card" style="width: 90%; max-width: 400px; padding: 24px; background: white;">
+            <h3 style="margin-bottom: 8px;">Register Your Farm</h3>
+            <p style="color: var(--text-light); margin-bottom: 20px; font-size: 0.9rem;">Enter your farm details to get accurate crop recommendations.</p>
+            <div class="input-group">
+                <label>Farm Name</label>
+                <input type="text" id="farmName" placeholder="e.g. Sunny Acres Farm">
+            </div>
+            <div class="input-group">
+                <label>Location (City)</label>
+                <input type="text" id="farmLocation" placeholder="e.g. Lagos">
+            </div>
+            <div class="input-group">
+                <label>State</label>
+                <input type="text" id="farmState" placeholder="e.g. Lagos">
+            </div>
+            <div class="input-group">
+                <label>Primary Crop</label>
+                <select id="farmCrop" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 12px; background: var(--bg-light); font-family: inherit; font-size: 1rem;">
+                    <option value="">Loading crops...</option>
+                </select>
+            </div>
+            <button id="submitFarmBtn" style="margin-top: 10px;">Save Farm Details</button>
+            <button id="cancelFarmBtn" style="margin-top: 8px; background: transparent; color: var(--text-light); border: 1.5px solid var(--border-color);">Cancel</button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-house-chimney"></i><span>Overview</span>
+        </a>
+        <a href="farm.html" class="nav-item active">
+            <i class="fas fa-tractor"></i><span>Farms</span>
+        </a>
+        <a href="logs.html" class="nav-item">
+            <i class="fas fa-clipboard-list"></i><span>Logs</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user-circle"></i><span>Profile</span>
+        </a>
+    </div>
+
+    <script src="./config.js"></script>
+    <script src="./app.js"></script>
+</body>
+
+</html>

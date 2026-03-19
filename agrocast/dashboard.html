@@ -40,8 +40,8 @@
                 <p id="advisory-text" style="color: #b45309;">Analyzing optimal conditions for your crops...</p>
             </div>
             
-            <button id="openFarmModalBtn" style="margin-top: 20px; border-radius: 50px; font-weight: 600; background: var(--bg-light); color: var(--primary); border: 2px solid var(--primary);">
-                <i class="fas fa-plus-circle" style="margin-right: 8px;"></i> Register New Farm
+            <button onclick="window.location.href='farm.html'" style="margin-top: 20px; border-radius: 50px; font-weight: 600; background: var(--bg-light); color: var(--primary); border: 2px solid var(--primary); cursor: pointer; transition: all 0.2s;">
+                <i class="fas fa-tractor" style="margin-right: 8px;"></i> View & Register Farms
             </button>
         </div>
 
@@ -122,6 +122,12 @@
     <div class="bottom-nav">
         <a href="dashboard.html" class="nav-item active">
             <i class="fas fa-house-chimney"></i><span>Overview</span>
+        </a>
+        <a href="farm.html" class="nav-item">
+            <i class="fas fa-tractor"></i><span>Farms</span>
+        </a>
+        <a href="logs.html" class="nav-item">
+            <i class="fas fa-clipboard-list"></i><span>Logs</span>
         </a>
         <a href="profile.html" class="nav-item">
             <i class="fas fa-user-circle"></i><span>Profile</span>
